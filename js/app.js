@@ -32,7 +32,7 @@
  * 
 */
 
-// Build the nav
+// build the navigation items
 const sects  = document.getElementsByTagName('section');
 const navbar = document.getElementById('navbar__list');
 const fragment = document.createDocumentFragment();
@@ -47,10 +47,10 @@ for(sec of sects) {
 navbar.appendChild(fragment);
 
 
-// Add class 'active' to section when near top of viewport
+// add class 'active' to section when near top of viewport
 
 
-// Scroll to anchor ID using scrollTO event
+// scroll to anchor ID using scrollTO event
 
 
 /**
@@ -59,10 +59,10 @@ navbar.appendChild(fragment);
  * 
 */
 
-// Build menu 
+// build menu 
 
-// Scroll to section on link click
+// scroll to section on link click
 
-// Set sections as active
+// set sections as active
 
 
