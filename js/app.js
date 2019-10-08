@@ -26,14 +26,25 @@
 */
 
 
-
 /**
  * End Helper Functions
  * Begin Main Functions
  * 
 */
 
-// build the nav
+// Build the nav
+const sects  = document.getElementsByTagName('section');
+const navbar = document.getElementById('navbar__list');
+const fragment = document.createDocumentFragment();
+
+for(sec of sects) {
+	const nav = document.createElement('li');
+	nav.textContent = sec.getAttribute('data-nav');
+	nav.className = 'menu__link'; 
+	fragment.appendChild(nav);
+}
+
+navbar.appendChild(fragment);
 
 
 // Add class 'active' to section when near top of viewport
