@@ -17,7 +17,8 @@
  * Define Global Variables
  * 
 */
-
+const navbar = document.getElementById('navbar__list');		// emmpty navbar to be added items
+const sects  = document.getElementsByTagName('section');	// all available sections on page
 
 /**
  * End Global Variables
@@ -25,6 +26,17 @@
  * 
 */
 
+function isInViewport(element) {
+
+	const pos = element.getBoundingClientRect();
+
+	if( pos.top >= 0 && pos.left >= 0 &&
+		pos.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+		pos.left  <= (window.innerWidth  || document.documentElement.clientWidth))
+		return true;
+	else
+		return false;
+}
 
 /**
  * End Helper Functions
@@ -32,25 +44,47 @@
  * 
 */
 
-// build the navigation items
-const sects  = document.getElementsByTagName('section');
-const navbar = document.getElementById('navbar__list');
-const fragment = document.createDocumentFragment();
+// builds the navigation items
+function buildNav() {
 
-for(sec of sects) {
-	const nav = document.createElement('li');
-	nav.textContent = sec.getAttribute('data-nav');
-	nav.className = 'menu__link'; 
-	fragment.appendChild(nav);
+	const fragment = document.createDocumentFragment();
+
+	for(sect of sects) {
+		const nav = document.createElement('li');
+		nav.textContent = sect.getAttribute('data-nav');
+
+		// also stores the id as the classname for future ref
+		nav.className = `menu__link ${sect.id}`;
+		fragment.appendChild(nav);
+	}
+
+	navbar.appendChild(fragment);	
 }
 
-navbar.appendChild(fragment);
 
+// adds class 'active' to section when near top of viewport
+function setActive() {
 
-// add class 'active' to section when near top of viewport
+	for(sect of sects) {
+		
+		if(isInViewport(sect)) {
+			//sect.className = 'active';
+			console.log(`${sect.id} is active`);
+		} else {
+			//sect.className = '';
+		}
 
+	}
+}
 
-// scroll to anchor ID using scrollTO event
+// scrolls to anchor ID using scrollTO event
+function scrollToSect(event) {
+
+	if(event.target && event.target.nodeName == "LI") {
+		const clicked = event.target.classList.item(1);
+		document.getElementById(clicked).scrollIntoView();
+	}
+}
 
 
 /**
@@ -59,10 +93,11 @@ navbar.appendChild(fragment);
  * 
 */
 
-// build menu 
+buildNav();
 
-// scroll to section on link click
+// scrolls to section on link click
+navbar.addEventListener('click', scrollToSect);
 
-// set sections as active
-
+// checks which sections are active on scroll
+window.addEventListener("scroll", setActive);
 
