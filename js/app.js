@@ -17,8 +17,12 @@
  * Define Global Variables
  * 
 */
+
 const navbar = document.getElementById('navbar__list');		// emmpty navbar to be added items
 const sects  = document.getElementsByTagName('section');	// all available sections on page
+
+let prevActive = document.getElementById('section1');		// previously active section
+let currActive = document.getElementById('section1');		// currently active section
 
 /**
  * End Global Variables
@@ -30,18 +34,20 @@ function isInViewport(element) {
 
 	const pos = element.getBoundingClientRect();
 
-	if( pos.top >= 0 && pos.left >= 0 &&
-		pos.top <= (window.innerHeight || document.documentElement.clientHeight) &&
-		pos.left  <= (window.innerWidth  || document.documentElement.clientWidth))
-		return true;
-	else
-		return false;
+	const vh1 = window.innerHeight;
+	const vh2 = document.documentElement.clientHeight;	
+
+	// if top of the element crosses the 50% viewport
+	// then replace the new active section 
+	if (pos.top >= 0 && pos.top <= (vh1 / 2 || vh2 / 2)) {
+		prevActive = currActive;
+		currActive = element;
+	}
 }
 
 /**
  * End Helper Functions
  * Begin Main Functions
- * 
 */
 
 // builds the navigation items
@@ -49,7 +55,7 @@ function buildNav() {
 
 	const fragment = document.createDocumentFragment();
 
-	for(sect of sects) {
+	for (sect of sects) {
 		const nav = document.createElement('li');
 		nav.textContent = sect.getAttribute('data-nav');
 
@@ -61,31 +67,26 @@ function buildNav() {
 	navbar.appendChild(fragment);	
 }
 
-
-// adds class 'active' to section when near top of viewport
+// adds class 'active' to section when crosses the 50% viewport
 function setActive() {
 
-	for(sect of sects) {
-		
-		if(isInViewport(sect)) {
-			//sect.className = 'active';
-			console.log(`${sect.id} is active`);
-		} else {
-			//sect.className = '';
-		}
+	for (sect of sects)
+		isInViewport(sect);		
 
+	if (prevActive != currActive) {
+		currActive.classList.add('active');
+		prevActive.classList.remove('active');
 	}
 }
 
 // scrolls to anchor ID using scrollTO event
 function scrollToSect(event) {
 
-	if(event.target && event.target.nodeName == "LI") {
+	if (event.target && event.target.nodeName == "LI") {
 		const clicked = event.target.classList.item(1);
 		document.getElementById(clicked).scrollIntoView();
 	}
 }
-
 
 /**
  * End Main Functions
@@ -98,6 +99,6 @@ buildNav();
 // scrolls to section on link click
 navbar.addEventListener('click', scrollToSect);
 
-// checks which sections are active on scroll
+// checks which section is active on scroll
 window.addEventListener("scroll", setActive);
 
