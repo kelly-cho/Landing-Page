@@ -26,7 +26,9 @@ let currActive = document.getElementById('section1');		// currently active secti
 
 let scrollPost = 0;											// keeps track of scroll position
 let scrollDire = true;										// true if scrolling down, false if up
-let clickedSec = 0;
+
+let clickedSec = 0;											// section that's selected from the navigation
+
 /**
  * End Global Variables
  * Start Helper Functions
@@ -92,7 +94,10 @@ function buildNav() {
 		fragment.appendChild(nav);
 	}
 
-	navbar.appendChild(fragment);	
+	navbar.appendChild(fragment);
+
+	let activeNavi = document.getElementsByClassName(currActive.id)[0];
+	activeNavi.style.color = 'orange';	
 }
 
 // adds class 'active' to section when crosses the 50% viewport
@@ -118,6 +123,12 @@ function setActive() {
 	if (prevActive != currActive) {
 		currActive.classList.add('active');
 		prevActive.classList.remove('active');
+
+		let activeNavi = document.getElementsByClassName(currActive.id)[0];
+		activeNavi.style.color = 'orange';
+		
+		let nonactiveNavi = document.getElementsByClassName(prevActive.id)[0];
+		nonactiveNavi.style.color = 'white';
 	}
 }
 
