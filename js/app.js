@@ -24,6 +24,9 @@ const sects  = document.getElementsByTagName('section');	// all available sectio
 let prevActive = document.getElementById('section1');		// previously active section
 let currActive = document.getElementById('section1');		// currently active section
 
+let scrollPost = 0;											// keeps track of scroll position
+let scrollDire = true;										// true if scrolling down, false if up
+let clickedSec = 0;
 /**
  * End Global Variables
  * Start Helper Functions
@@ -33,16 +36,41 @@ let currActive = document.getElementById('section1');		// currently active secti
 function isInViewport(element) {
 
 	const pos = element.getBoundingClientRect();
-
+ 
 	const vh1 = window.innerHeight;
 	const vh2 = document.documentElement.clientHeight;	
 
-	// if top of the element crosses the 50% viewport
-	// then replace the new active section 
-	if (pos.top >= 0 && pos.top <= (vh1 / 2 || vh2 / 2)) {
-		prevActive = currActive;
-		currActive = element;
+	// if scrolling down
+	if (scrollDire)	{
+
+		// if top of the element crosses the top 50% viewport
+		// then replace the new active section 
+		if (pos.top >= 0 && pos.top <= (vh1 / 2 || vh2 / 2)) {
+			prevActive = currActive;
+			currActive = element;
+		}
+
+	// if scrolling up
+	} else {
+
+		// if bottom of the element crosses the bottom 50% viewport
+		// then replace the new active section 
+		if (pos.bottom >= (vh1 / 2 || vh2 / 2) && pos.bottom <= (vh1 || vh2)) {
+			prevActive = currActive;
+			currActive = element;
+		}
 	}
+}
+
+function checkScrollDir() {
+
+	if (document.body.getBoundingClientRect().top < scrollPost)
+		scrollDire = true;	// scroll down
+	else
+		scrollDire = false;	// scroll up 
+
+	// saves current scroll position
+	scrollPost = document.body.getBoundingClientRect().top;
 }
 
 /**
@@ -70,8 +98,22 @@ function buildNav() {
 // adds class 'active' to section when crosses the 50% viewport
 function setActive() {
 
-	for (sect of sects)
-		isInViewport(sect);		
+	// if a menu item is clicked
+	if (clickedSec != 0) {
+		
+		prevActive = currActive;
+		currActive = clickedSec;
+
+		// restore back to default
+		clickedSec = 0;
+
+	} else {
+
+		checkScrollDir();
+
+		for (sect of sects)
+			isInViewport(sect);			
+	}
 
 	if (prevActive != currActive) {
 		currActive.classList.add('active');
@@ -85,6 +127,7 @@ function scrollToSect(event) {
 	if (event.target && event.target.nodeName == "LI") {
 		const clicked = event.target.classList.item(1);
 		document.getElementById(clicked).scrollIntoView();
+		clickedSec = document.getElementById(clicked);
 	}
 }
 
