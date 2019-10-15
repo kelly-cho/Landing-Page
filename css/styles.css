@@ -10,8 +10,12 @@
 
 
 /* ---- Base Rules ---- */
+html { 
+    scroll-behavior: smooth; 
+}
+
 body {
-background: black;
+    background: black;
     margin: 0;
     font-family: 'Merriweather', serif;
     color: #fff;
